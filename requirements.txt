@@ -1,0 +1,3 @@
+node
+
+npm install pdf-to-printer // for printing option
