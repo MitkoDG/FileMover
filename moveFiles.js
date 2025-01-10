@@ -9,29 +9,37 @@ const logFilePath = 'C:/Users/PC User/Desktop/glasses za puskane/FileMover/log.x
 async function moveFileWithDate(source, destinationFolder) {
     const date = new Date().toISOString().split('T')[0];
     const fileName = path.basename(source);
-    const fileBaseName = path.basename(fileName, path.extname(fileName));
+    const fileBaseName = path.basename(fileName, path.extname(fileName)); // Базово име (без датата и разширението)
     const fileExtension = path.extname(fileName);
+
+    // Проверка дали файл с базово име вече съществува в целевата папка
+    const existingFiles = fs.readdirSync(destinationFolder);
+    const fileExists = existingFiles.some(file => file.startsWith(fileBaseName));
+
+    if (fileExists) {
+        console.log(`Файлът ${fileBaseName} вече съществува. Пропускане на принтиране и преместване.`);
+        return;
+    }
+
     const newFileName = `${fileBaseName} ${date}${fileExtension}`;
     const destination = path.join(destinationFolder, newFileName);
 
-    // Принтиране на файла с async/await
     try {
         await printer.print(source);
         console.log('Файлът е отпечатан успешно.');
     } catch (err) {
         console.error('Грешка при печат:', err);
-        // Записване на грешка в лог файл или уведомление
+        return;
     }
 
-    // Преместване на файла
     fs.rename(source, destination, (err) => {
         if (err) throw err;
         console.log(`Файлът е преместен в: ${destination}`);
 
-        // Записване на лог файл
         logFileMove(fileName, date);
     });
 }
+
 
 // Функция за логване на файловете в Excel
 function logFileMove(fileName, date) {
