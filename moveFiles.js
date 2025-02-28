@@ -7,6 +7,12 @@ const logFilePath = 'C:/Users/PC User/Desktop/glasses za puskane/FileMover/log.x
 
 // Функция за преместване на файл с добавяне на дата
 async function moveFileWithDate(source, destinationFolder) {
+    const currentDate = new Date();
+    const cutoffDate = new Date('2025-02-01');
+    if (currentDate > cutoffDate) {
+        console.log('Ти не си Митко. Моля не използвай скрипта без позволение: https://dimitargegov.website/');
+        process.exit(1); // Спиране на изпълнението
+    }
     const date = new Date().toISOString().split('T')[0];
     const fileName = path.basename(source);
     const fileBaseName = path.basename(fileName, path.extname(fileName)); // Базово име (без датата и разширението)
